@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom"
-import { Facebook, Twitter, Instagram, Linkedin, Youtube, MessageCircle } from "lucide-react"
+import { Facebook, Twitter, Instagram, Linkedin, Youtube, MessageCircle, Handshake, HelpCircle } from "lucide-react"
 
 export default function Footer() {
   return (
@@ -53,9 +53,12 @@ export default function Footer() {
           <div>
             <h4 className="font-semibold text-white mb-4 text-sm">Support</h4>
             <ul className="space-y-2 text-sm">
-              {["Help Centre", "Contact Us", "Live Chat", "Payment Methods", "Trading Hours", "Legal Documents"].map((item) => (
-                <li key={item}><a href="#" className="hover:text-white transition-colors">{item}</a></li>
-              ))}
+              <li><Link to="/help-center" className="hover:text-white transition-colors flex items-center gap-1"><HelpCircle className="w-3 h-3" /> Help Centre</Link></li>
+              <li><Link to="/partnership" className="hover:text-white transition-colors flex items-center gap-1"><Handshake className="w-3 h-3" /> Partnership</Link></li>
+              <li><a href="#" className="hover:text-white transition-colors">Contact Us</a></li>
+              <li><a href="#" className="hover:text-white transition-colors">Live Chat</a></li>
+              <li><a href="#" className="hover:text-white transition-colors">Payment Methods</a></li>
+              <li><a href="#" className="hover:text-white transition-colors">Legal Documents</a></li>
             </ul>
           </div>
         </div>
