@@ -7,6 +7,7 @@ import { Toaster } from "@/components/ui/toaster"
 import Navbar from "@/components/Navbar"
 import Footer from "@/components/Footer"
 import AdminRoute from "@/components/AdminRoute"
+import LiveMarketTicker from "@/components/markets/LiveMarketTicker"
 import Home from "@/pages/Home"
 import TradingDashboard from "@/pages/TradingDashboard"
 import Markets from "@/pages/Markets"
@@ -19,6 +20,8 @@ import Withdraw from "@/pages/Withdraw"
 import Admin from "@/pages/Admin"
 import CopyTrading from "@/pages/CopyTrading"
 import Settings from "@/pages/Settings"
+import Profile from "@/pages/Profile"
+import KYC from "@/pages/KYC"
 import MT4 from "@/pages/MT4"
 import MT5 from "@/pages/MT5"
 import TradingPlatforms from "@/pages/TradingPlatforms"
@@ -28,5 +31,5 @@ import HelpCenter from "@/pages/HelpCenter"
 import NotFound from "@/pages/NotFound"
 
 function ScrollToTop() { const { pathname } = useLocation(); useEffect(() => { window.scrollTo(0, 0) }, [pathname]); return null }
-function RoutedContent() { const location = useLocation(); return <AnimatePresence mode="wait"><motion.main key={location.pathname} className="flex-1" initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -4 }} transition={{ duration: 0.18, ease: "easeOut" }}><Routes location={location}><Route path="/" element={<Home />} /><Route path="/trading" element={<TradingDashboard />} /><Route path="/markets" element={<Markets />} /><Route path="/login" element={<Login />} /><Route path="/register" element={<RegisterWizard />} /><Route path="/dashboard" element={<Dashboard />} /><Route path="/funding" element={<Funding />} /><Route path="/deposit" element={<Deposit />} /><Route path="/withdraw" element={<Withdraw />} /><Route path="/control-room" element={<AdminRoute><Admin /></AdminRoute>} /><Route path="/copy-trading" element={<CopyTrading />} /><Route path="/settings" element={<Settings />} /><Route path="/platforms/mt4" element={<MT4 />} /><Route path="/platforms/mt5" element={<MT5 />} /><Route path="/platforms" element={<TradingPlatforms />} /><Route path="/about" element={<About />} /><Route path="/partnership" element={<Partnership />} /><Route path="/help-center" element={<HelpCenter />} /><Route path="*" element={<NotFound />} /></Routes></motion.main></AnimatePresence> }
-export default function App() { return <ThemeProvider><AuthProvider><ScrollToTop /><div className="min-h-screen flex flex-col bg-background transition-colors duration-200"><Navbar /><RoutedContent /><Footer /><Toaster /></div></AuthProvider></ThemeProvider> }
+function RoutedContent() { const location = useLocation(); return <AnimatePresence mode="wait"><motion.main key={location.pathname} className="flex-1" initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -4 }} transition={{ duration: 0.18, ease: "easeOut" }}><Routes location={location}><Route path="/" element={<Home />} /><Route path="/trading" element={<TradingDashboard />} /><Route path="/markets" element={<Markets />} /><Route path="/login" element={<Login />} /><Route path="/register" element={<RegisterWizard />} /><Route path="/dashboard" element={<Dashboard />} /><Route path="/profile" element={<Profile />} /><Route path="/kyc" element={<KYC />} /><Route path="/funding" element={<Funding />} /><Route path="/deposit" element={<Deposit />} /><Route path="/withdraw" element={<Withdraw />} /><Route path="/control-room" element={<AdminRoute><Admin /></AdminRoute>} /><Route path="/copy-trading" element={<CopyTrading />} /><Route path="/settings" element={<Settings />} /><Route path="/platforms/mt4" element={<MT4 />} /><Route path="/platforms/mt5" element={<MT5 />} /><Route path="/platforms" element={<TradingPlatforms />} /><Route path="/about" element={<About />} /><Route path="/partnership" element={<Partnership />} /><Route path="/help-center" element={<HelpCenter />} /><Route path="*" element={<NotFound />} /></Routes></motion.main></AnimatePresence> }
+export default function App() { return <ThemeProvider><AuthProvider><ScrollToTop /><div className="min-h-screen flex flex-col bg-background transition-colors duration-200"><Navbar /><LiveMarketTicker /><RoutedContent /><Footer /><Toaster /></div></AuthProvider></ThemeProvider> }
