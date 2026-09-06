@@ -2,11 +2,11 @@ export interface Instrument {
   symbol: string
   name: string
   category: "forex" | "crypto" | "commodity" | "index" | "stock"
-  bid: number
-  ask: number
-  change: number
-  changePercent: number
-  spread: number
+  bid?: number
+  ask?: number
+  change?: number
+  changePercent?: number
+  spread?: number
   icon?: string
 }
 
