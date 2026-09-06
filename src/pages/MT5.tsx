@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom"
-import { Monitor, Smartphone, Globe, Check, BarChart3, Zap, Shield, Clock, Layers, MousePointer, TrendingUp, BookOpen } from "lucide-react"
+import { Monitor, Smartphone, Globe, BarChart3, Zap, Shield, Layers, TrendingUp, BookOpen } from "lucide-react"
 
 export default function MT5() {
   const features = [
@@ -10,44 +10,5 @@ export default function MT5() {
     { icon: Zap, title: "Hedging & Netting", desc: "Choose your preferred position mode" },
     { icon: Shield, title: "Advanced Security", desc: "256-bit SSL encryption for all transactions" },
   ]
-
-  return (
-    <div className="container mx-auto px-4 py-12">
-      <div className="text-center mb-12">
-        <h1 className="text-4xl font-bold mb-4">MetaTrader 5</h1>
-        <p className="text-xl text-muted-foreground max-w-2xl mx-auto">The next-generation platform with advanced tools, wider market coverage, and improved execution.</p>
-      </div>
-
-      <div className="grid md:grid-cols-2 gap-8 mb-12">
-        <div className="bg-card border border-border rounded-lg p-6">
-          <h2 className="text-2xl font-bold mb-4">Download MT5</h2>
-          <p className="text-muted-foreground mb-6">Advanced trading on desktop and mobile with enhanced features.</p>
-          <div className="grid grid-cols-2 gap-3 mb-4">
-            <button className="p-3 bg-muted rounded-lg flex items-center gap-2 hover:bg-muted/80 transition-colors"><Monitor className="w-5 h-5" /> Windows</button>
-            <button className="p-3 bg-muted rounded-lg flex items-center gap-2 hover:bg-muted/80 transition-colors"><Monitor className="w-5 h-5" /> Mac</button>
-            <button className="p-3 bg-muted rounded-lg flex items-center gap-2 hover:bg-muted/80 transition-colors"><Smartphone className="w-5 h-5" /> iOS</button>
-            <button className="p-3 bg-muted rounded-lg flex items-center gap-2 hover:bg-muted/80 transition-colors"><Smartphone className="w-5 h-5" /> Android</button>
-          </div>
-          <Link to="/register" className="block text-center py-2.5 bg-red-600 text-white rounded-md font-medium hover:bg-red-700 transition-colors">Open Live Account</Link>
-        </div>
-
-        <div className="bg-card border border-border rounded-lg p-6">
-          <h2 className="text-2xl font-bold mb-4">MT5 WebTrader</h2>
-          <p className="text-muted-foreground mb-6">Full MT5 functionality in your browser. No download needed.</p>
-          <div className="flex items-center gap-2 mb-4"><Globe className="w-5 h-5 text-red-600" /> <span>Works in all modern browsers</span></div>
-          <Link to="/register" className="block text-center py-2.5 border border-border rounded-md font-medium hover:bg-muted transition-colors">Launch WebTrader</Link>
-        </div>
-      </div>
-
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {features.map((f) => (
-          <div key={f.title} className="p-5 bg-card border border-border rounded-lg hover:shadow-md transition-shadow">
-            <f.icon className="w-8 h-8 text-red-600 mb-3" />
-            <h3 className="font-semibold mb-1">{f.title}</h3>
-            <p className="text-sm text-muted-foreground">{f.desc}</p>
-          </div>
-        ))}
-      </div>
-    </div>
-  )
+  return <div className="container mx-auto px-4 py-12"><div className="mb-12 text-center"><h1 className="mb-4 text-4xl font-bold">MetaTrader 5</h1><p className="mx-auto max-w-2xl text-xl text-muted-foreground">The next-generation platform with advanced tools, wider market coverage, and improved execution.</p></div><div className="mb-12 grid gap-8 md:grid-cols-2"><div className="rounded-lg border border-border bg-card p-6"><h2 className="mb-4 text-2xl font-bold">Download MT5</h2><p className="mb-6 text-muted-foreground">Advanced trading on desktop and mobile with enhanced features.</p><div className="mb-4 grid grid-cols-2 gap-3"><button className="flex items-center gap-2 rounded-lg bg-muted p-3 transition-colors hover:bg-muted/80"><Monitor className="h-5 w-5" /> Windows</button><button className="flex items-center gap-2 rounded-lg bg-muted p-3 transition-colors hover:bg-muted/80"><Monitor className="h-5 w-5" /> Mac</button><button className="flex items-center gap-2 rounded-lg bg-muted p-3 transition-colors hover:bg-muted/80"><Smartphone className="h-5 w-5" /> iOS</button><button className="flex items-center gap-2 rounded-lg bg-muted p-3 transition-colors hover:bg-muted/80"><Smartphone className="h-5 w-5" /> Android</button></div><Link to="/register" className="block rounded-md bg-red-600 py-2.5 text-center font-medium text-white transition-colors hover:bg-red-700">Open Live Account</Link></div><div className="rounded-lg border border-border bg-card p-6"><h2 className="mb-4 text-2xl font-bold">MT5 WebTrader</h2><p className="mb-6 text-muted-foreground">Full MT5 functionality in your browser. No download needed.</p><div className="mb-4 flex items-center gap-2"><Globe className="h-5 w-5 text-red-600" /><span>Works in all modern browsers</span></div><Link to="/register" className="block rounded-md border border-border py-2.5 text-center font-medium transition-colors hover:bg-muted">Launch WebTrader</Link></div></div><div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">{features.map((f) => <div key={f.title} className="rounded-lg border border-border bg-card p-5 transition-shadow hover:shadow-md"><f.icon className="mb-3 h-8 w-8 text-red-600" /><h3 className="mb-1 font-semibold">{f.title}</h3><p className="text-sm text-muted-foreground">{f.desc}</p></div>)}</div></div>
 }
