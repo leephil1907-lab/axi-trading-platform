@@ -1,27 +1,6 @@
 import { useMemo, useState, type ReactNode } from "react"
 import { Link } from "react-router-dom"
-import {
-  Activity,
-  ArrowLeft,
-  BarChart3,
-  Building2,
-  CheckCircle2,
-  ChevronRight,
-  CircleDollarSign,
-  CreditCard,
-  ExternalLink,
-  FileCheck2,
-  LayoutDashboard,
-  LogOut,
-  Menu,
-  MessageCircle,
-  PanelTop,
-  ShieldCheck,
-  SlidersHorizontal,
-  Users,
-  WalletCards,
-  X,
-} from "lucide-react"
+import { Activity, ArrowLeft, BarChart3, Building2, CheckCircle2, ChevronRight, CircleDollarSign, CreditCard, ExternalLink, FileCheck2, LayoutDashboard, LogOut, Menu, MessageCircle, PanelTop, ShieldCheck, SlidersHorizontal, Users, WalletCards, X } from "lucide-react"
 import { configuredCryptoNetworks } from "@/lib/crypto"
 import { useAuth } from "@/lib/AuthContext"
 
@@ -65,7 +44,7 @@ export default function Admin() {
 
   return (
     <div className="min-h-[calc(100vh-4rem)] bg-[#f4f5f7] text-[#171717] dark:bg-[#0b0d10] dark:text-white">
-      <div className="border-b border-[#dedede] bg-white dark:border-white/10 dark:bg-[#111419]">
+      <header className="border-b border-[#dedede] bg-white dark:border-white/10 dark:bg-[#111419]">
         <div className="mx-auto flex min-h-[74px] max-w-[1320px] items-center justify-between gap-4 px-5 lg:px-8">
           <div className="flex min-w-0 items-center gap-3 sm:gap-5">
             <Link to="/trading" className="inline-flex items-center gap-2 text-sm font-semibold text-[#343434] hover:text-[#c8102e] dark:text-white/80 dark:hover:text-white"><ArrowLeft className="h-4 w-4" /><span className="hidden sm:inline">Trading</span></Link>
@@ -73,12 +52,9 @@ export default function Admin() {
             <div className="flex min-w-0 items-center gap-2.5"><span className="grid h-7 w-7 shrink-0 place-items-center rounded-full border-2 border-[#c8102e] text-[#c8102e]"><ShieldCheck className="h-4 w-4" /></span><span className="truncate text-base font-extrabold tracking-[-0.02em] sm:text-lg">Admin Dashboard</span></div>
             <span className="hidden items-center gap-1.5 rounded-full bg-[#e8f7ed] px-3 py-1.5 text-xs font-bold text-[#18743c] sm:inline-flex dark:bg-emerald-500/10 dark:text-emerald-300"><span className="h-2 w-2 rounded-full bg-[#1c9a50]" />System Online</span>
           </div>
-          <div className="flex items-center gap-2">
-            <button onClick={logout} className="hidden items-center gap-2 rounded-lg border border-[#d9d9d9] bg-white px-4 py-2.5 text-sm font-bold hover:bg-[#f7f7f7] sm:inline-flex dark:border-white/15 dark:bg-[#15191f] dark:hover:bg-white/5"><LogOut className="h-4 w-4" />Sign out</button>
-            <button onClick={() => setMobileNavOpen((open) => !open)} aria-label="Toggle admin navigation" className="inline-flex rounded-lg border border-[#ddd] p-2 sm:hidden dark:border-white/15">{mobileNavOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}</button>
-          </div>
+          <div className="flex items-center gap-2"><button onClick={logout} className="hidden items-center gap-2 rounded-lg border border-[#d9d9d9] bg-white px-4 py-2.5 text-sm font-bold hover:bg-[#f7f7f7] sm:inline-flex dark:border-white/15 dark:bg-[#15191f] dark:hover:bg-white/5"><LogOut className="h-4 w-4" />Sign out</button><button onClick={() => setMobileNavOpen((open) => !open)} aria-label="Toggle admin navigation" className="inline-flex rounded-lg border border-[#ddd] p-2 sm:hidden dark:border-white/15">{mobileNavOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}</button></div>
         </div>
-      </div>
+      </header>
 
       <main className="mx-auto max-w-[1320px] px-5 py-7 lg:px-8 lg:py-8">
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
@@ -89,14 +65,11 @@ export default function Admin() {
         </div>
 
         {mobileNavOpen && <div className="mt-4 rounded-2xl border border-[#ddd] bg-white p-3 shadow-sm dark:border-white/10 dark:bg-[#111419] sm:hidden"><AdminTabList activeTab={activeTab} selectTab={selectTab} /><button onClick={logout} className="mt-2 flex w-full items-center gap-2 rounded-xl px-3 py-3 text-left text-sm font-bold text-[#c8102e] hover:bg-red-50 dark:hover:bg-red-500/10"><LogOut className="h-4 w-4" />Sign out</button></div>}
-
         <div className="mt-7 hidden border-b border-[#d8d8d8] md:block dark:border-white/10"><AdminTabList activeTab={activeTab} selectTab={selectTab} horizontal /></div>
 
         <section className="mt-6 overflow-hidden rounded-2xl border border-[#dfdfdf] bg-white shadow-[0_1px_3px_rgba(0,0,0,.03)] dark:border-white/10 dark:bg-[#111419]">
-          <div className="border-b border-[#e6e6e6] px-6 py-5 dark:border-white/10 sm:px-7">
-            <div className="flex items-start justify-between gap-4"><div><div className="flex items-center gap-2 text-[#c8102e]"><Activity className="h-5 w-5" /><span className="text-base font-extrabold">{active.id === "overview" ? "Operations overview" : active.label}</span></div><p className="mt-1.5 max-w-3xl text-sm leading-6 text-[#777] dark:text-white/55">{descriptionFor(activeTab)}</p></div><span className="hidden rounded-full bg-[#f1f7f3] px-3 py-1 text-xs font-bold text-[#197541] sm:inline-flex dark:bg-emerald-500/10 dark:text-emerald-300">Production controls</span></div>
-          </div>
-          {activeTab === "overview" ? <OverviewContent wallets={wallets} onSelect={selectTab} /> : <ManagementPanel tab={activeTab} wallets={wallets} accountCount={accountCount} onSelect={selectTab} />}
+          <div className="border-b border-[#e6e6e6] px-6 py-5 dark:border-white/10 sm:px-7"><div className="flex items-start justify-between gap-4"><div><div className="flex items-center gap-2 text-[#c8102e]"><Activity className="h-5 w-5" /><span className="text-base font-extrabold">{active.id === "overview" ? "Operations overview" : active.label}</span></div><p className="mt-1.5 max-w-3xl text-sm leading-6 text-[#777] dark:text-white/55">{descriptionFor(activeTab)}</p></div><span className="hidden rounded-full bg-[#f1f7f3] px-3 py-1 text-xs font-bold text-[#197541] sm:inline-flex dark:bg-emerald-500/10 dark:text-emerald-300">Production controls</span></div></div>
+          {activeTab === "overview" ? <OverviewContent wallets={wallets} onSelect={selectTab} /> : <ManagementPanel tab={activeTab} wallets={wallets} accountCount={accountCount} />}
         </section>
 
         <div className="mt-4 flex flex-wrap items-center justify-between gap-3 text-xs text-[#888] dark:text-white/45"><span>Authenticated operator: <strong className="text-[#555] dark:text-white/70">{user?.email || "—"}</strong></span><Link to="/trading" className="inline-flex items-center gap-1 font-bold text-[#c8102e] hover:underline">Open client trading area <ExternalLink className="h-3.5 w-3.5" /></Link></div>
@@ -123,7 +96,7 @@ function QuickAction({ icon, title, description, onClick }: { icon: ReactNode; t
   return <button onClick={onClick} className="group rounded-xl border border-[#e2e2e2] bg-white p-5 text-left hover:-translate-y-0.5 hover:shadow-sm dark:border-white/10 dark:bg-[#15191f]"><span className="text-[#c8102e]">{icon}</span><div className="mt-3 font-extrabold">{title}</div><div className="mt-1 text-sm text-[#818181] dark:text-white/45">{description}</div><span className="mt-3 inline-flex items-center gap-1 text-xs font-bold text-[#c8102e] opacity-0 transition group-hover:opacity-100">Open <ChevronRight className="h-3.5 w-3.5" /></span></button>
 }
 
-function ManagementPanel({ tab, wallets, accountCount, onSelect }: { tab: Exclude<TabId, "overview">; wallets: ReturnType<typeof configuredCryptoNetworks>; accountCount: number; onSelect: (id: TabId) => void }) {
+function ManagementPanel({ tab, wallets, accountCount }: { tab: Exclude<TabId, "overview">; wallets: ReturnType<typeof configuredCryptoNetworks>; accountCount: number }) {
   if (tab === "wallets") return <div className="space-y-3 p-6 sm:p-7">{wallets.length ? wallets.map((wallet) => <div key={`${wallet.asset}-${wallet.network}`} className="flex flex-col gap-2 rounded-xl border border-[#e3e3e3] p-4 sm:flex-row sm:items-center sm:justify-between dark:border-white/10"><div><p className="font-extrabold">{wallet.asset} · {wallet.network}</p><p className="mt-1 text-xs text-[#777] dark:text-white/45">Production deposit address</p></div><span className="break-all rounded-lg bg-[#f7f7f7] px-3 py-2 font-mono text-xs dark:bg-white/5">{wallet.address}</span></div>) : <EmptyState title="No wallet addresses configured" text="Add production wallet addresses through the deployment environment before enabling deposits." />}</div>
   if (tab === "users") return <div className="p-6 sm:p-7"><div className="rounded-xl border border-[#e3e3e3] p-5 dark:border-white/10"><p className="text-3xl font-black">{accountCount}</p><p className="mt-1 text-sm text-[#777] dark:text-white/50">Locally registered accounts currently visible to this client.</p><p className="mt-4 text-xs text-[#999]">For multi-user production management, connect this view to the server-side user ledger.</p></div></div>
   if (tab === "kyc") return <div className="p-6 sm:p-7"><EmptyState title="KYC review queue" text="The verification workflow is available to users. Connect a production KYC provider and review API to populate this queue." action="Open client KYC" onClick={() => window.location.assign("/kyc")} /></div>
