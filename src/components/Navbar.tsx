@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { Link, useLocation } from "react-router-dom"
-import { Menu, X, ChevronDown, LogOut, Settings, Wallet, BarChart3, LayoutDashboard, HelpCircle, Sun, Moon, UserRound, ShieldCheck } from "lucide-react"
+import { Menu, X, ChevronDown, LogOut, Settings, Wallet, BarChart3, LayoutDashboard, Sun, Moon, UserRound, ShieldCheck } from "lucide-react"
 import { navLinks } from "@/lib/data"
 import { useAuth } from "@/lib/AuthContext"
 import { useTheme } from "@/lib/ThemeContext"
