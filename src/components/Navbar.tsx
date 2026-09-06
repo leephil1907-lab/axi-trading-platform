@@ -1,125 +1,79 @@
 import { useState } from "react"
 import { Link, useLocation, useNavigate } from "react-router-dom"
-import { Menu, X, ChevronDown, User, LogOut, Shield, Settings, Wallet, BarChart3, Copy, LayoutDashboard, HelpCircle, Handshake } from "lucide-react"
+import { Menu, X, ChevronDown, LogOut, Settings, Wallet, BarChart3, LayoutDashboard, HelpCircle, Sun, Moon, UserRound } from "lucide-react"
 import { navLinks } from "@/lib/data"
+import { useAuth } from "@/lib/AuthContext"
+import { useTheme } from "@/lib/ThemeContext"
 import { cn } from "@/lib/utils"
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [openDropdown, setOpenDropdown] = useState<string | null>(null)
+  const [accountOpen, setAccountOpen] = useState(false)
   const location = useLocation()
   const navigate = useNavigate()
-  const isLoggedIn = localStorage.getItem("axi_user") !== null
-
-  const isActive = (href: string) => location.pathname === href || location.pathname.startsWith(href + "/")
+  const { user, logout, isAdmin } = useAuth()
+  const { theme, toggleTheme } = useTheme()
+  const isActive = (href: string) => href !== "#" && (location.pathname === href || location.pathname.startsWith(href + "/"))
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container mx-auto px-4 h-14 flex items-center justify-between">
-        <Link to="/" className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-red-600 rounded-md flex items-center justify-center">
-            <span className="text-white font-bold text-sm">A</span>
-          </div>
-          <span className="font-bold text-lg tracking-tight">axi</span>
+    <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
+      <div className="container mx-auto flex h-16 items-center justify-between px-4">
+        <Link to="/" className="flex items-center gap-2 shrink-0">
+          <span className="grid h-8 w-8 place-items-center rounded-md bg-[#d71920] text-sm font-black text-white">A</span>
+          <span className="text-xl font-extrabold tracking-tight">axi</span>
         </Link>
 
-        <nav className="hidden lg:flex items-center gap-6">
+        <nav className="hidden xl:flex items-center gap-5">
           {navLinks.map((link) => (
-            <div
-              key={link.label}
-              className="relative"
-              onMouseEnter={() => link.children && setOpenDropdown(link.label)}
-              onMouseLeave={() => setOpenDropdown(null)}
-            >
-              <Link
-                to={link.href}
-                className={cn(
-                  "flex items-center gap-1 text-sm font-medium transition-colors hover:text-foreground",
-                  isActive(link.href) ? "text-foreground" : "text-muted-foreground"
-                )}
-              >
-                {link.label}
-                {link.children && <ChevronDown className="w-3 h-3" />}
+            <div key={link.label} className="relative" onMouseEnter={() => link.children && setOpenDropdown(link.label)} onMouseLeave={() => setOpenDropdown(null)}>
+              <Link to={link.href} className={cn("flex items-center gap-1 text-sm font-medium transition-colors hover:text-foreground", isActive(link.href) ? "text-foreground" : "text-muted-foreground")}>
+                {link.label}{link.children && <ChevronDown className="h-3.5 w-3.5" />}
               </Link>
               {link.children && openDropdown === link.label && (
-                <div className="absolute top-full left-0 mt-1 w-56 bg-popover border border-border rounded-lg shadow-lg p-1.5 space-y-0.5">
-                  {link.children.map((child) => (
-                    <Link
-                      key={child.label}
-                      to={child.href}
-                      className="block px-3 py-2 text-sm rounded-md hover:bg-muted transition-colors"
-                    >
-                      {child.label}
-                    </Link>
-                  ))}
+                <div className="absolute left-0 top-full mt-2 w-60 rounded-xl border border-border bg-popover p-2 shadow-2xl">
+                  {link.children.map((child) => <Link key={child.label} to={child.href} className="block rounded-lg px-3 py-2.5 text-sm hover:bg-muted transition-colors">{child.label}</Link>)}
                 </div>
               )}
             </div>
           ))}
-          <Link to="/partnership" className={cn("text-sm font-medium transition-colors hover:text-foreground", isActive("/partnership") ? "text-foreground" : "text-muted-foreground")}>Partnership</Link>
-          <Link to="/help-center" className={cn("text-sm font-medium transition-colors hover:text-foreground", isActive("/help-center") ? "text-foreground" : "text-muted-foreground")}>Help</Link>
+          <Link to="/partnership" className="text-sm font-medium text-muted-foreground hover:text-foreground">Partnership</Link>
+          <Link to="/help-center" className="text-sm font-medium text-muted-foreground hover:text-foreground">Help</Link>
         </nav>
 
-        <div className="hidden lg:flex items-center gap-3">
-          {isLoggedIn ? (
-            <>
-              <button onClick={() => navigate("/dashboard")} className="text-sm text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1">
-                <LayoutDashboard className="w-4 h-4" /> Dashboard
+        <div className="hidden lg:flex items-center gap-2">
+          <button onClick={toggleTheme} aria-label="Toggle theme" className="grid h-9 w-9 place-items-center rounded-full hover:bg-muted transition-colors" title={theme === "dark" ? "Switch to light theme" : "Switch to dark theme"}>
+            {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+          </button>
+          {user ? (
+            <div className="relative">
+              <button onClick={() => setAccountOpen((open) => !open)} className="flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-sm font-medium hover:bg-muted transition-colors">
+                <span className="grid h-6 w-6 place-items-center rounded-full bg-[#d71920] text-[10px] font-bold text-white">{user.name.slice(0, 1).toUpperCase()}</span>
+                <span className="max-w-28 truncate">{user.name}</span><ChevronDown className="h-3.5 w-3.5" />
               </button>
-              <button onClick={() => { localStorage.removeItem("axi_user"); navigate("/"); window.location.reload() }} className="text-sm text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1">
-                <LogOut className="w-4 h-4" /> Logout
-              </button>
-            </>
-          ) : (
-            <>
-              <Link to="/login" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Log in</Link>
-              <Link to="/register" className="text-sm font-medium bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition-colors">Open Account</Link>
-            </>
-          )}
+              {accountOpen && <div className="absolute right-0 top-full mt-2 w-60 rounded-xl border border-border bg-popover p-2 shadow-2xl">
+                <div className="border-b border-border px-3 py-2"><p className="text-sm font-semibold truncate">{user.name}</p><p className="text-xs text-muted-foreground truncate">{user.email}</p></div>
+                <Link to="/dashboard" onClick={() => setAccountOpen(false)} className="mt-1 flex items-center gap-2 rounded-lg px-3 py-2 text-sm hover:bg-muted"><LayoutDashboard className="h-4 w-4" /> Dashboard</Link>
+                <Link to="/trading" onClick={() => setAccountOpen(false)} className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm hover:bg-muted"><BarChart3 className="h-4 w-4" /> Trading</Link>
+                <Link to="/deposit" onClick={() => setAccountOpen(false)} className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm hover:bg-muted"><Wallet className="h-4 w-4" /> Funding</Link>
+                <Link to="/settings" onClick={() => setAccountOpen(false)} className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm hover:bg-muted"><Settings className="h-4 w-4" /> Settings</Link>
+                <Link to="/help-center" onClick={() => setAccountOpen(false)} className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm hover:bg-muted"><HelpCircle className="h-4 w-4" /> Help Centre</Link>
+                {isAdmin && <Link to="/control-room" onClick={() => setAccountOpen(false)} className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm hover:bg-muted"><UserRound className="h-4 w-4" /> Control room</Link>}
+                <button onClick={() => { setAccountOpen(false); logout() }} className="mt-1 flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30"><LogOut className="h-4 w-4" /> Log out</button>
+              </div>}
+            </div>
+          ) : <><Link to="/login" className="px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground">Log in</Link><Link to="/register" className="rounded-lg bg-[#d71920] px-4 py-2 text-sm font-semibold text-white hover:bg-[#b9141a] transition-colors">Open Account</Link></>}
         </div>
 
-        <button onClick={() => setMobileOpen(!mobileOpen)} className="lg:hidden p-2">
-          {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-        </button>
+        <button onClick={() => setMobileOpen((open) => !open)} className="rounded-md p-2 hover:bg-muted lg:hidden">{mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}</button>
       </div>
 
-      {mobileOpen && (
-        <div className="lg:hidden border-t border-border bg-background">
-          <div className="container mx-auto px-4 py-4 space-y-4">
-            {navLinks.map((link) => (
-              <div key={link.label}>
-                <Link to={link.href} onClick={() => setMobileOpen(false)} className="block text-sm font-medium py-1">{link.label}</Link>
-                {link.children && (
-                  <div className="pl-4 mt-1 space-y-1">
-                    {link.children.map((child) => (
-                      <Link key={child.label} to={child.href} onClick={() => setMobileOpen(false)} className="block text-sm text-muted-foreground py-1">{child.label}</Link>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ))}
-            <Link to="/partnership" onClick={() => setMobileOpen(false)} className="block text-sm font-medium py-1">Partnership</Link>
-            <Link to="/help-center" onClick={() => setMobileOpen(false)} className="block text-sm font-medium py-1">Help Centre</Link>
-            <div className="pt-4 border-t border-border flex flex-col gap-2">
-              {isLoggedIn ? (
-                <>
-                  <Link to="/dashboard" onClick={() => setMobileOpen(false)} className="flex items-center gap-2 text-sm py-2"><LayoutDashboard className="w-4 h-4" /> Dashboard</Link>
-                  <Link to="/trading" onClick={() => setMobileOpen(false)} className="flex items-center gap-2 text-sm py-2"><BarChart3 className="w-4 h-4" /> Trading</Link>
-                  <Link to="/deposit" onClick={() => setMobileOpen(false)} className="flex items-center gap-2 text-sm py-2"><Wallet className="w-4 h-4" /> Deposit</Link>
-                  <Link to="/settings" onClick={() => setMobileOpen(false)} className="flex items-center gap-2 text-sm py-2"><Settings className="w-4 h-4" /> Settings</Link>
-                  <Link to="/help-center" onClick={() => setMobileOpen(false)} className="flex items-center gap-2 text-sm py-2"><HelpCircle className="w-4 h-4" /> Help Centre</Link>
-                  <button onClick={() => { localStorage.removeItem("axi_user"); navigate("/"); window.location.reload() }} className="flex items-center gap-2 text-sm py-2 text-red-600"><LogOut className="w-4 h-4" /> Logout</button>
-                </>
-              ) : (
-                <>
-                  <Link to="/login" onClick={() => setMobileOpen(false)} className="text-sm font-medium py-2">Log in</Link>
-                  <Link to="/register" onClick={() => setMobileOpen(false)} className="text-sm font-medium bg-red-600 text-white px-4 py-2 rounded-md text-center">Open Account</Link>
-                </>
-              )}
-            </div>
-          </div>
+      {mobileOpen && <div className="border-t border-border bg-background lg:hidden">
+        <div className="container mx-auto space-y-1 px-4 py-4">
+          {navLinks.map((link) => <div key={link.label}><Link to={link.href} onClick={() => setMobileOpen(false)} className="block py-2 text-sm font-medium">{link.label}</Link>{link.children && <div className="pl-4">{link.children.map((child) => <Link key={child.label} to={child.href} onClick={() => setMobileOpen(false)} className="block py-1.5 text-sm text-muted-foreground">{child.label}</Link>)}</div>}</div>)}
+          {user ? <div className="mt-3 border-t border-border pt-3 space-y-1"><Link to="/dashboard" onClick={() => setMobileOpen(false)} className="flex items-center gap-2 py-2 text-sm"><LayoutDashboard className="h-4 w-4" /> Dashboard</Link><Link to="/trading" onClick={() => setMobileOpen(false)} className="flex items-center gap-2 py-2 text-sm"><BarChart3 className="h-4 w-4" /> Trading</Link><Link to="/deposit" onClick={() => setMobileOpen(false)} className="flex items-center gap-2 py-2 text-sm"><Wallet className="h-4 w-4" /> Funding</Link><Link to="/settings" onClick={() => setMobileOpen(false)} className="flex items-center gap-2 py-2 text-sm"><Settings className="h-4 w-4" /> Settings</Link><button onClick={() => { setMobileOpen(false); toggleTheme() }} className="flex items-center gap-2 py-2 text-sm">{theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />} Switch theme</button><button onClick={() => { setMobileOpen(false); logout() }} className="flex items-center gap-2 py-2 text-sm text-red-600"><LogOut className="h-4 w-4" /> Log out</button></div> : <div className="mt-3 border-t border-border pt-3"><Link to="/login" onClick={() => setMobileOpen(false)} className="block py-2 text-sm font-medium">Log in</Link><Link to="/register" onClick={() => setMobileOpen(false)} className="block rounded-lg bg-[#d71920] py-2 text-center text-sm font-semibold text-white">Open Account</Link></div>}
         </div>
-      )}
+      </div>}
     </header>
   )
 }
