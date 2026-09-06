@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
-import { Eye, EyeOff, LogIn } from "lucide-react"
+import { Eye, EyeOff, ArrowRight, ShieldCheck } from "lucide-react"
 import { useAuth } from "@/lib/AuthContext"
 import { toast } from "@/components/ui/toaster"
 
@@ -11,49 +11,7 @@ export default function Login() {
   const [loading, setLoading] = useState(false)
   const { login } = useAuth()
   const navigate = useNavigate()
+  const submit = async (event: React.FormEvent) => { event.preventDefault(); setLoading(true); const ok = await login(email, password); setLoading(false); if (!ok) { toast("Email or password is incorrect", "error"); return } toast("Welcome back", "success"); navigate("/dashboard") }
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setLoading(true)
-    const ok = await login(email, password)
-    setLoading(false)
-    if (ok) {
-      toast("Login successful", "success")
-      navigate("/dashboard")
-    } else {
-      toast("Invalid credentials", "error")
-    }
-  }
-
-  return (
-    <div className="min-h-[calc(100vh-3.5rem)] flex items-center justify-center bg-muted/30 py-12">
-      <div className="w-full max-w-md p-8 bg-card border border-border rounded-xl shadow-lg">
-        <div className="text-center mb-6">
-          <h1 className="text-2xl font-bold">Welcome Back</h1>
-          <p className="text-sm text-muted-foreground">Log in to your Axi trading account</p>
-        </div>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="text-sm font-medium">Email</label>
-            <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} className="w-full mt-1 h-10 px-3 rounded-md border border-input bg-background focus:outline-none focus:ring-2 focus:ring-ring" placeholder="you@example.com" />
-          </div>
-          <div>
-            <label className="text-sm font-medium">Password</label>
-            <div className="relative mt-1">
-              <input type={show ? "text" : "password"} required value={password} onChange={(e) => setPassword(e.target.value)} className="w-full h-10 px-3 pr-10 rounded-md border border-input bg-background focus:outline-none focus:ring-2 focus:ring-ring" placeholder="••••••••" />
-              <button type="button" onClick={() => setShow(!show)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground">
-                {show ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-              </button>
-            </div>
-          </div>
-          <button type="submit" disabled={loading} className="w-full h-10 bg-red-600 text-white rounded-md font-medium hover:bg-red-700 transition-colors disabled:opacity-50 flex items-center justify-center gap-2">
-            <LogIn className="w-4 h-4" /> {loading ? "Logging in..." : "Log In"}
-          </button>
-        </form>
-        <div className="mt-4 text-center text-sm text-muted-foreground">
-          Don't have an account? <Link to="/register" className="text-red-600 font-medium hover:underline">Open Account</Link>
-        </div>
-      </div>
-    </div>
-  )
+  return <div className="min-h-[calc(100vh-4rem)] bg-muted/30 px-4 py-12"><div className="mx-auto grid max-w-5xl overflow-hidden rounded-2xl border border-border bg-card shadow-xl lg:grid-cols-[1.05fr_.95fr]"><div className="hidden bg-slate-950 p-10 text-white lg:flex lg:flex-col lg:justify-between"><div><div className="grid h-10 w-10 place-items-center rounded-md bg-[#d71920] font-black">A</div><h1 className="mt-10 text-4xl font-bold leading-tight">Welcome back.</h1><p className="mt-4 max-w-md text-slate-400">Sign in to your trading workspace and manage your account, markets and funding from one place.</p></div><div className="flex items-center gap-2 text-xs text-slate-400"><ShieldCheck className="h-4 w-4 text-red-500" /> Secure account area</div></div><div className="p-7 sm:p-10"><div className="mb-8"><p className="text-sm font-semibold text-red-600">Client login</p><h2 className="mt-2 text-2xl font-bold">Log in</h2><p className="mt-2 text-sm text-muted-foreground">Use the email and password associated with your account.</p></div><form onSubmit={submit} className="space-y-5"><div><label className="text-sm font-medium">Email address</label><input type="email" autoComplete="email" required value={email} onChange={(e) => setEmail(e.target.value)} className="mt-1.5 h-11 w-full rounded-lg border border-input bg-background px-3 outline-none focus:ring-2 focus:ring-ring" /></div><div><div className="flex items-center justify-between"><label className="text-sm font-medium">Password</label><button type="button" className="text-xs font-medium text-red-600">Forgot password?</button></div><div className="relative mt-1.5"><input type={show ? "text" : "password"} autoComplete="current-password" required value={password} onChange={(e) => setPassword(e.target.value)} className="h-11 w-full rounded-lg border border-input bg-background px-3 pr-11 outline-none focus:ring-2 focus:ring-ring" /><button type="button" onClick={() => setShow((value) => !value)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground">{show ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}</button></div></div><button disabled={loading} className="flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-[#d71920] font-semibold text-white hover:bg-[#b9141a] disabled:cursor-not-allowed disabled:opacity-60">{loading ? "Signing in…" : "Log in"}<ArrowRight className="h-4 w-4" /></button></form><p className="mt-7 text-center text-sm text-muted-foreground">New to the platform? <Link to="/register" className="font-semibold text-red-600 hover:underline">Create an account</Link></p></div></div></div>
 }
