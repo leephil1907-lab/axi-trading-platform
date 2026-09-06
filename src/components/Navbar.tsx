@@ -1,79 +1,14 @@
 import { useState } from "react"
-import { Link, useLocation, useNavigate } from "react-router-dom"
-import { Menu, X, ChevronDown, LogOut, Settings, Wallet, BarChart3, LayoutDashboard, HelpCircle, Sun, Moon, UserRound } from "lucide-react"
+import { Link, useLocation } from "react-router-dom"
+import { Menu, X, ChevronDown, LogOut, Settings, Wallet, BarChart3, LayoutDashboard, HelpCircle, Sun, Moon, UserRound, ShieldCheck } from "lucide-react"
 import { navLinks } from "@/lib/data"
 import { useAuth } from "@/lib/AuthContext"
 import { useTheme } from "@/lib/ThemeContext"
 import { cn } from "@/lib/utils"
 
 export default function Navbar() {
-  const [mobileOpen, setMobileOpen] = useState(false)
-  const [openDropdown, setOpenDropdown] = useState<string | null>(null)
-  const [accountOpen, setAccountOpen] = useState(false)
-  const location = useLocation()
-  const navigate = useNavigate()
-  const { user, logout, isAdmin } = useAuth()
-  const { theme, toggleTheme } = useTheme()
+  const [mobileOpen, setMobileOpen] = useState(false), [openDropdown, setOpenDropdown] = useState<string | null>(null), [accountOpen, setAccountOpen] = useState(false)
+  const location = useLocation(); const { user, logout, isAdmin } = useAuth(); const { theme, toggleTheme } = useTheme()
   const isActive = (href: string) => href !== "#" && (location.pathname === href || location.pathname.startsWith(href + "/"))
-
-  return (
-    <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
-      <div className="container mx-auto flex h-16 items-center justify-between px-4">
-        <Link to="/" className="flex items-center gap-2 shrink-0">
-          <span className="grid h-8 w-8 place-items-center rounded-md bg-[#d71920] text-sm font-black text-white">A</span>
-          <span className="text-xl font-extrabold tracking-tight">axi</span>
-        </Link>
-
-        <nav className="hidden xl:flex items-center gap-5">
-          {navLinks.map((link) => (
-            <div key={link.label} className="relative" onMouseEnter={() => link.children && setOpenDropdown(link.label)} onMouseLeave={() => setOpenDropdown(null)}>
-              <Link to={link.href} className={cn("flex items-center gap-1 text-sm font-medium transition-colors hover:text-foreground", isActive(link.href) ? "text-foreground" : "text-muted-foreground")}>
-                {link.label}{link.children && <ChevronDown className="h-3.5 w-3.5" />}
-              </Link>
-              {link.children && openDropdown === link.label && (
-                <div className="absolute left-0 top-full mt-2 w-60 rounded-xl border border-border bg-popover p-2 shadow-2xl">
-                  {link.children.map((child) => <Link key={child.label} to={child.href} className="block rounded-lg px-3 py-2.5 text-sm hover:bg-muted transition-colors">{child.label}</Link>)}
-                </div>
-              )}
-            </div>
-          ))}
-          <Link to="/partnership" className="text-sm font-medium text-muted-foreground hover:text-foreground">Partnership</Link>
-          <Link to="/help-center" className="text-sm font-medium text-muted-foreground hover:text-foreground">Help</Link>
-        </nav>
-
-        <div className="hidden lg:flex items-center gap-2">
-          <button onClick={toggleTheme} aria-label="Toggle theme" className="grid h-9 w-9 place-items-center rounded-full hover:bg-muted transition-colors" title={theme === "dark" ? "Switch to light theme" : "Switch to dark theme"}>
-            {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-          </button>
-          {user ? (
-            <div className="relative">
-              <button onClick={() => setAccountOpen((open) => !open)} className="flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-sm font-medium hover:bg-muted transition-colors">
-                <span className="grid h-6 w-6 place-items-center rounded-full bg-[#d71920] text-[10px] font-bold text-white">{user.name.slice(0, 1).toUpperCase()}</span>
-                <span className="max-w-28 truncate">{user.name}</span><ChevronDown className="h-3.5 w-3.5" />
-              </button>
-              {accountOpen && <div className="absolute right-0 top-full mt-2 w-60 rounded-xl border border-border bg-popover p-2 shadow-2xl">
-                <div className="border-b border-border px-3 py-2"><p className="text-sm font-semibold truncate">{user.name}</p><p className="text-xs text-muted-foreground truncate">{user.email}</p></div>
-                <Link to="/dashboard" onClick={() => setAccountOpen(false)} className="mt-1 flex items-center gap-2 rounded-lg px-3 py-2 text-sm hover:bg-muted"><LayoutDashboard className="h-4 w-4" /> Dashboard</Link>
-                <Link to="/trading" onClick={() => setAccountOpen(false)} className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm hover:bg-muted"><BarChart3 className="h-4 w-4" /> Trading</Link>
-                <Link to="/deposit" onClick={() => setAccountOpen(false)} className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm hover:bg-muted"><Wallet className="h-4 w-4" /> Funding</Link>
-                <Link to="/settings" onClick={() => setAccountOpen(false)} className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm hover:bg-muted"><Settings className="h-4 w-4" /> Settings</Link>
-                <Link to="/help-center" onClick={() => setAccountOpen(false)} className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm hover:bg-muted"><HelpCircle className="h-4 w-4" /> Help Centre</Link>
-                {isAdmin && <Link to="/control-room" onClick={() => setAccountOpen(false)} className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm hover:bg-muted"><UserRound className="h-4 w-4" /> Control room</Link>}
-                <button onClick={() => { setAccountOpen(false); logout() }} className="mt-1 flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30"><LogOut className="h-4 w-4" /> Log out</button>
-              </div>}
-            </div>
-          ) : <><Link to="/login" className="px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground">Log in</Link><Link to="/register" className="rounded-lg bg-[#d71920] px-4 py-2 text-sm font-semibold text-white hover:bg-[#b9141a] transition-colors">Open Account</Link></>}
-        </div>
-
-        <button onClick={() => setMobileOpen((open) => !open)} className="rounded-md p-2 hover:bg-muted lg:hidden">{mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}</button>
-      </div>
-
-      {mobileOpen && <div className="border-t border-border bg-background lg:hidden">
-        <div className="container mx-auto space-y-1 px-4 py-4">
-          {navLinks.map((link) => <div key={link.label}><Link to={link.href} onClick={() => setMobileOpen(false)} className="block py-2 text-sm font-medium">{link.label}</Link>{link.children && <div className="pl-4">{link.children.map((child) => <Link key={child.label} to={child.href} onClick={() => setMobileOpen(false)} className="block py-1.5 text-sm text-muted-foreground">{child.label}</Link>)}</div>}</div>)}
-          {user ? <div className="mt-3 border-t border-border pt-3 space-y-1"><Link to="/dashboard" onClick={() => setMobileOpen(false)} className="flex items-center gap-2 py-2 text-sm"><LayoutDashboard className="h-4 w-4" /> Dashboard</Link><Link to="/trading" onClick={() => setMobileOpen(false)} className="flex items-center gap-2 py-2 text-sm"><BarChart3 className="h-4 w-4" /> Trading</Link><Link to="/deposit" onClick={() => setMobileOpen(false)} className="flex items-center gap-2 py-2 text-sm"><Wallet className="h-4 w-4" /> Funding</Link><Link to="/settings" onClick={() => setMobileOpen(false)} className="flex items-center gap-2 py-2 text-sm"><Settings className="h-4 w-4" /> Settings</Link><button onClick={() => { setMobileOpen(false); toggleTheme() }} className="flex items-center gap-2 py-2 text-sm">{theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />} Switch theme</button><button onClick={() => { setMobileOpen(false); logout() }} className="flex items-center gap-2 py-2 text-sm text-red-600"><LogOut className="h-4 w-4" /> Log out</button></div> : <div className="mt-3 border-t border-border pt-3"><Link to="/login" onClick={() => setMobileOpen(false)} className="block py-2 text-sm font-medium">Log in</Link><Link to="/register" onClick={() => setMobileOpen(false)} className="block rounded-lg bg-[#d71920] py-2 text-center text-sm font-semibold text-white">Open Account</Link></div>}
-        </div>
-      </div>}
-    </header>
-  )
+  return <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur"><div className="container mx-auto flex h-16 items-center justify-between px-4"><Link to="/" className="flex shrink-0 items-center gap-2"><span className="grid h-8 w-8 place-items-center rounded-md bg-[#d71920] text-sm font-black text-white">A</span><span className="text-xl font-extrabold tracking-tight">axi</span></Link><nav className="hidden xl:flex items-center gap-5">{navLinks.map((link) => <div key={link.label} className="relative" onMouseEnter={() => link.children && setOpenDropdown(link.label)} onMouseLeave={() => setOpenDropdown(null)}><Link to={link.href} className={cn("flex items-center gap-1 text-sm font-medium hover:text-foreground", isActive(link.href) ? "text-foreground" : "text-muted-foreground")}>{link.label}{link.children && <ChevronDown className="h-3.5 w-3.5" />}</Link>{link.children && openDropdown === link.label && <div className="absolute left-0 top-full mt-2 w-60 rounded-xl border border-border bg-popover p-2 shadow-2xl">{link.children.map((child) => <Link key={child.label} to={child.href} className="block rounded-lg px-3 py-2.5 text-sm hover:bg-muted">{child.label}</Link>)}</div>}</div>)}<Link to="/partnership" className="text-sm font-medium text-muted-foreground hover:text-foreground">Partnership</Link><Link to="/help-center" className="text-sm font-medium text-muted-foreground hover:text-foreground">Help</Link></nav><div className="hidden lg:flex items-center gap-2"><button onClick={toggleTheme} className="grid h-9 w-9 place-items-center rounded-full hover:bg-muted" aria-label="Toggle theme">{theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}</button>{user ? <div className="relative"><button onClick={() => setAccountOpen(!accountOpen)} className="flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-sm font-medium hover:bg-muted"><span className="grid h-6 w-6 place-items-center rounded-full bg-[#d71920] text-[10px] font-bold text-white">{user.name.slice(0,1).toUpperCase()}</span><span className="max-w-28 truncate">{user.name}</span><ChevronDown className="h-3.5 w-3.5" /></button>{accountOpen && <div className="absolute right-0 top-full mt-2 w-60 rounded-xl border border-border bg-popover p-2 shadow-2xl"><div className="border-b border-border px-3 py-2"><p className="text-sm font-semibold truncate">{user.name}</p><p className="text-xs text-muted-foreground truncate">{user.email}</p></div><Link to="/profile" onClick={() => setAccountOpen(false)} className="mt-1 flex items-center gap-2 rounded-lg px-3 py-2 text-sm hover:bg-muted"><UserRound className="h-4 w-4" /> Profile</Link><Link to="/kyc" onClick={() => setAccountOpen(false)} className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm hover:bg-muted"><ShieldCheck className="h-4 w-4" /> Verification</Link><Link to="/dashboard" onClick={() => setAccountOpen(false)} className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm hover:bg-muted"><LayoutDashboard className="h-4 w-4" /> Dashboard</Link><Link to="/trading" onClick={() => setAccountOpen(false)} className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm hover:bg-muted"><BarChart3 className="h-4 w-4" /> Trading</Link><Link to="/deposit" onClick={() => setAccountOpen(false)} className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm hover:bg-muted"><Wallet className="h-4 w-4" /> Funding</Link><Link to="/settings" onClick={() => setAccountOpen(false)} className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm hover:bg-muted"><Settings className="h-4 w-4" /> Settings</Link>{isAdmin && <Link to="/control-room" onClick={() => setAccountOpen(false)} className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm hover:bg-muted"><ShieldCheck className="h-4 w-4" /> Control room</Link>}<button onClick={() => { setAccountOpen(false); logout() }} className="mt-1 flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-red-600 hover:bg-red-50"><LogOut className="h-4 w-4" /> Log out</button></div>}</div> : <><Link to="/login" className="px-3 py-2 text-sm font-medium text-muted-foreground">Log in</Link><Link to="/register" className="rounded-lg bg-[#d71920] px-4 py-2 text-sm font-semibold text-white">Open Account</Link></>}</div><button onClick={() => setMobileOpen(!mobileOpen)} className="rounded-md p-2 hover:bg-muted lg:hidden">{mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}</button></div>{mobileOpen && <div className="border-t border-border bg-background lg:hidden"><div className="container mx-auto space-y-1 px-4 py-4">{navLinks.map((link) => <div key={link.label}><Link to={link.href} onClick={() => setMobileOpen(false)} className="block py-2 text-sm font-medium">{link.label}</Link>{link.children && <div className="pl-4">{link.children.map((child) => <Link key={child.label} to={child.href} onClick={() => setMobileOpen(false)} className="block py-1.5 text-sm text-muted-foreground">{child.label}</Link>)}</div>}</div>)}{user && <div className="mt-3 border-t border-border pt-3 space-y-1"><Link to="/profile" onClick={() => setMobileOpen(false)} className="flex items-center gap-2 py-2 text-sm"><UserRound className="h-4 w-4" /> Profile</Link><Link to="/kyc" onClick={() => setMobileOpen(false)} className="flex items-center gap-2 py-2 text-sm"><ShieldCheck className="h-4 w-4" /> Verification</Link><Link to="/dashboard" onClick={() => setMobileOpen(false)} className="flex items-center gap-2 py-2 text-sm"><LayoutDashboard className="h-4 w-4" /> Dashboard</Link><Link to="/trading" onClick={() => setMobileOpen(false)} className="flex items-center gap-2 py-2 text-sm"><BarChart3 className="h-4 w-4" /> Trading</Link><Link to="/deposit" onClick={() => setMobileOpen(false)} className="flex items-center gap-2 py-2 text-sm"><Wallet className="h-4 w-4" /> Funding</Link><Link to="/settings" onClick={() => setMobileOpen(false)} className="flex items-center gap-2 py-2 text-sm"><Settings className="h-4 w-4" /> Settings</Link><button onClick={() => toggleTheme()} className="flex items-center gap-2 py-2 text-sm">{theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />} Switch theme</button><button onClick={() => { setMobileOpen(false); logout() }} className="flex items-center gap-2 py-2 text-sm text-red-600"><LogOut className="h-4 w-4" /> Log out</button></div>}</div></div>}</header>
 }
